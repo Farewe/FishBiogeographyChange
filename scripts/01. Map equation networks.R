@@ -1479,6 +1479,9 @@ pnative2 <- ggplot() +
                         order = 1)) +
   thememaps
 
+saveRDS(pnative2,
+        "outputs/pnative2.RDS")
+
 # Native level 3
 pnative3 <- ggplot() +
   geom_sf(data = gr, color = 'grey') +

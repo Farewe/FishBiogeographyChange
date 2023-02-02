@@ -323,26 +323,67 @@ fixed_effects$x <- as.numeric(fixed_effects$dataset) - .5
 fixed_effects$xend <- as.numeric(fixed_effects$dataset) + .5
 
 
+margins::margins(pc.endemism.model)
+library(emmeans)
+ggmod <- data.frame(emmeans(pc.endemism.model,
+                            specs = c("native.cluster", "dataset")))
+ggmod$emmean <- boot::inv.logit(ggmod$emmean)
+ggmod$SE <- boot::inv.logit(ggmod$SE)
+ggmod$asymp.LCL <- boot::inv.logit(ggmod$asymp.LCL)
+ggmod$asymp.UCL <- boot::inv.logit(ggmod$asymp.UCL)
 
-cairo_pdf("./outputs/Figure 1.pdf", h = 10, w = 10)
-ggplot() +
-  geom_boxplot(data = ggsite.metrics2,
-               aes(y = pc.endemism,
-                   x = dataset,
-                   fill = dataset)) +
-  geom_segment(data = fixed_effects,
-             aes(x = x,
-                 xend = xend,
-                 y = pc.endemism,
-                 yend = pc.endemism),
-             linetype = 2) +
-  scale_fill_manual(values = c("#96D4A4", "#E75A47"),
-                    labels = c("Natural", "Anthropocene"),
-                    name = "")  +
-  scale_y_continuous(labels=scales::percent) +
-  facet_wrap(~ native.cluster)  +
-  xlab("") + ylab("Percentage of endemic species\nper drainage basin") +
+
+diffs <- ggmod$emmean[ggmod$dataset == "Natural"] - ggmod$emmean[ggmod$dataset == "Anthropocene"]
+names(diffs) <- ggmod$native.cluster[ggmod$dataset == "Natural"]
+diffs
+
+ggplot(ggmod, aes(x = native.cluster, y = emmean, colour = dataset)) + 
+  geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL), width=.1, position = pd) +
+  geom_point(position = pd)
+
+
+tb <- data.frame(emmeans(pc.endemism.model, c("gp", "anthopo"))) #correct way when you have an interaction
+
+ggsite.metrics2$dataset <- factor(ggsite.metrics2$dataset,
+                                  levels = c("Anthropocene", "Natural"))
+ggmod$dataset <- factor(ggmod$dataset,
+                        levels = c("Anthropocene", "Natural"))
+ggsite.metrics2$native.cluster <- factor(ggsite.metrics2$native.cluster,
+                                         levels = rev(levels(ggsite.metrics2$native.cluster)))
+ggmod$native.cluster <- factor(ggmod$native.cluster,
+                               levels = rev(levels(ggmod$native.cluster)))
+
+pend <- ggplot() +
+  geom_point(data = ggsite.metrics2,
+             aes(y = pc.endemism,
+                 x = native.cluster,
+                 col = dataset),
+             position = position_dodge(width = .75),
+             alpha = .2) +
+  geom_errorbar(data = ggmod, 
+                aes(x = native.cluster,
+                    ymin = asymp.LCL, ymax = asymp.UCL,
+                    colour = dataset), 
+                width = 0.5,
+                linewidth = 1.5, position = position_dodge(width = .75)) +
+  geom_point(data = ggmod, aes(x = native.cluster,
+                               y = emmean, 
+                               fill = dataset),
+             col = "black",
+             position = position_dodge(width = .75),
+             size = 4,
+             shape = 21) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_colour_manual(values = c("#ca0020", "#0571b0"),
+                      labels = c("Anthropocene", "Natural"),
+                      name = "")  +
+  scale_fill_manual(values = c("#ca0020", "#0571b0"),
+                    labels = c("Anthropocene", "Natural"),
+                    name = "") +
+  coord_flip() +
   theme_bw() +
+  xlab("Natural biogeographical regions") + 
+  ylab("Percentage of endemic species per drainage basin") +
   theme(legend.position = "top",
         legend.text = element_text(size = 13),
         axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 1,
@@ -354,7 +395,64 @@ ggplot() +
         panel.grid.minor.y = element_blank(),
         axis.title.x = element_text(size = 17),
         axis.title.y = element_text(size = 17),
-        strip.text.x = element_text(size = 13))
+        strip.text.x = element_text(size = 13),
+        panel.border = element_blank()) +
+  scale_x_discrete(breaks = factor(c(levels(ggmod$native.cluster), "")),
+                   limits = c(levels(ggmod$native.cluster), ""))
+
+library(egg)
+
+
+
+bioregions.lvl2 <- readRDS("./data/bioregions_lvl2")
+pnative2 <- readRDS("outputs/pnative2.RDS")
+
+levels(ggmod$native.cluster)
+df <- data.frame(x = 1:10, y = 1:10)
+base <- ggplot(df, aes(x, y)) +
+  geom_blank() + theme_void()
+
+
+  
+
+cairo_pdf("./outputs/Figure 1.pdf", h = 10, w = 10)
+
+pend + 
+  annotation_custom(
+    ggplotGrob(pnative2 + theme(legend.position = "none",
+                                plot.background = element_rect(colour = "grey"))), 
+    xmin = 6.3, xmax = 8.1, ymin = -.3, ymax = .25
+  ) +
+  annotation_custom(
+    ggplotGrob(base + theme(plot.background = element_rect(fill = bioregions.lvl2$col.native.lvl2[1]))), 
+    xmin = 5.85, xmax = 5.65, ymin = -.15, ymax = -.1
+  ) +
+  annotation_custom(
+    ggplotGrob(base + theme(plot.background = element_rect(fill = bioregions.lvl2$col.native.lvl2[2]))), 
+    xmin = 4.85, xmax = 4.65, ymin = -.15, ymax = -.1
+  ) +
+  annotation_custom(
+    ggplotGrob(base + theme(plot.background = element_rect(fill = bioregions.lvl2$col.native.lvl2[3]))), 
+    xmin = 3.85, xmax = 3.65, ymin = -.15, ymax = -.1
+  ) +
+  annotation_custom(
+    ggplotGrob(base + theme(plot.background = element_rect(fill = bioregions.lvl2$col.native.lvl2[4]))), 
+    xmin = 2.85, xmax = 2.65, ymin = -.15, ymax = -.1
+  ) +
+  annotation_custom(
+    ggplotGrob(base + theme(plot.background = element_rect(fill = bioregions.lvl2$col.native.lvl2[5]))), 
+    xmin = 1.85, xmax = 1.65, ymin = -.15, ymax = -.1
+  ) +
+  annotation_custom(
+    ggplotGrob(base + theme(plot.background = element_rect(fill = bioregions.lvl2$col.native.lvl2[6]))), 
+    xmin = 0.85, xmax = 0.65, ymin = -.15, ymax = -.1
+  ) +
+  annotation_custom(
+    ggplotGrob(base + theme(plot.background = element_rect(fill = "white",
+                                                           colour = "white"))), 
+    xmin = 6.9, xmax = 7.8, ymin = .218, ymax = 1.1
+  )
+
 dev.off()
 
 
