@@ -337,13 +337,6 @@ diffs <- ggmod$emmean[ggmod$dataset == "Natural"] - ggmod$emmean[ggmod$dataset =
 names(diffs) <- ggmod$native.cluster[ggmod$dataset == "Natural"]
 diffs
 
-ggplot(ggmod, aes(x = native.cluster, y = emmean, colour = dataset)) + 
-  geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL), width=.1, position = pd) +
-  geom_point(position = pd)
-
-
-tb <- data.frame(emmeans(pc.endemism.model, c("gp", "anthopo"))) #correct way when you have an interaction
-
 ggsite.metrics2$dataset <- factor(ggsite.metrics2$dataset,
                                   levels = c("Anthropocene", "Natural"))
 ggmod$dataset <- factor(ggmod$dataset,
@@ -384,7 +377,7 @@ pend <- ggplot() +
   theme_bw() +
   xlab("Natural biogeographical regions") + 
   ylab("Percentage of endemic species per drainage basin") +
-  theme(legend.position = "top",
+  theme(legend.position = c(.75, .9),
         legend.text = element_text(size = 13),
         axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 1,
                                    size = 13),
@@ -400,7 +393,7 @@ pend <- ggplot() +
   scale_x_discrete(breaks = factor(c(levels(ggmod$native.cluster), "")),
                    limits = c(levels(ggmod$native.cluster), ""))
 
-library(egg)
+ library(egg)
 
 
 
@@ -450,8 +443,9 @@ pend +
   annotation_custom(
     ggplotGrob(base + theme(plot.background = element_rect(fill = "white",
                                                            colour = "white"))), 
-    xmin = 6.9, xmax = 7.8, ymin = .218, ymax = 1.1
-  )
+    xmin = 6.9, xmax = 7.8, ymin = .21, ymax = 1.1
+  ) +
+  ggtitle("\n\n\n")
 
 dev.off()
 
