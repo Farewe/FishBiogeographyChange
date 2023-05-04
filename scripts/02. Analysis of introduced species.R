@@ -582,6 +582,22 @@ saveRDS(intro.chars,
 
 library(grid)
 
+intro.chars <- readRDS("./outputs/introduced_species_characteristics.RDS")
+
+intro.chars.summary <- intro.chars[, c("species", "network.region", "native.regions", "introduced.regions", "total.occ", "occ.native", "occ.introduced", "exotic.DilVal", "in.out.index", "endemism.status")]
+
+colnames(intro.chars.summary) <- c("Species", "Cluster", "Native regions", 
+                                   "Introduced\nregions", "Total\noccurrence",
+                                   "Occurrence in\nnative region", 
+                                   "Number of\nintroductions",
+                                   "Dilution value",
+                                   "Proportion\nof introductions\noutside\nnative region",
+                                   "Endemism status")
+
+xlsx::write.xlsx(intro.chars.summary, "outputs/introduced_species.xlsx",
+                 row.names = FALSE)
+
+
 topsp <- intro.chars[intro.chars$occ.introduced >= 100, c("species",
                                                           "in.out.index",
                                                           "occ.introduced")]
