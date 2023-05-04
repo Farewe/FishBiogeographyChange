@@ -282,6 +282,10 @@ ggsite.metrics$native.color[which(is.na(ggsite.metrics$native.color))] <- "#0000
 
 ggsite.metrics$pc.endemism <- ggsite.metrics$end.richness / ggsite.metrics$richness
 
+
+saveRDS(ggsite.metrics, "data/metrics_per_site_long.RDS")
+saveRDS(site.metrics, "data/metrics_per_site_wide.RDS")
+
 library(lme4)
 
 ggsite.metrics2 <- droplevels(ggsite.metrics[which(!(ggsite.metrics$native.cluster %in% c("Minor clusters", "No native cluster"))), ])
