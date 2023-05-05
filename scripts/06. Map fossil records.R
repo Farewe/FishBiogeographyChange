@@ -1,4 +1,5 @@
 library(sf)
+library(lwgeom)
 
 basins <- readRDS("./data/shapefile_regions.rds")
 
@@ -106,11 +107,24 @@ basins_ana$text <-
          " native species <br>• ",
          basins_ana$n_introduced, 
          " introduced species<br>• ",
-         " −", round(basins_ana$endemism.change * 100, 1),
+         " ↓", round(basins_ana$endemism.change * 100, 1),
          "% endemism <br>",
          "<br>Main introduced species:<br>",
          basins_ana$introduced.species)
 
+# Danube & Zambezi have 1 extirpation
+dz <- which(basins_ana$BasinName %in%
+              c("Danube", "Zambezi"))
+basins_ana$text[dz] <-
+  paste0("**", basins_ana$basin_clean[dz], "**<br><br>• ", 
+         basins_ana$richness.native[dz],
+         " native species <br>• ",
+         basins_ana$n_introduced[dz], 
+         " introduced species<br>• 1 extirpated species<br>• ",
+         " ↓", round(basins_ana$endemism.change[dz] * 100, 1),
+         "% endemism <br>",
+         "<br>Main introduced species:<br>",
+         basins_ana$introduced.species[dz])
 
 
 # Prepare map layers
@@ -118,12 +132,14 @@ wm <- st_read("./data/sig data/ne_50m_land.shp")
 wm <- st_transform_proj(wm,
                         crs = "+proj=wintri +datum=WGS84 +no_defs +over")
 
-antregionslvl1 <- readRDS("./data/region shapefiles/anthropocene_regions_lvl1.RDS")
+antregionslvl1.w <- readRDS("./data/region shapefiles/anthropocene_regions_lvl1_wintri.RDS")
+
+anthroregions.lvl1 <- readRDS("./data/anthroregions_lvl1")
 
 # Define y pos of text boxes for southern/northern hemisphere basins
 # "Mississippi"    "Mekong"         "Parana"         "Danube"        
 # "Zambezi"        "Murray.Darling"
-basins_ana$y_pos <- c(5e6, 5e6, -7e6, 10e6, -7.5e6, -7e6)
+basins_ana$y_pos <- c(5e6, 5e6, -7e6, 11.5e6, -7.5e6, -7e6)
 basins_ana$x_pos <- c(-14e6, 14.5e6, -12e6, -2e6, 4e6, 18e6)
 
 
@@ -137,8 +153,8 @@ ggplot() +
           col = NA,
           size = .5) +
   geom_sf(data = basins_ana,
-          fill = NA,
-          col = "black")  + 
+          fill = grey(.8, .6),
+          col = grey(.2))  + 
   geom_point(data = basins_ana,
              aes(x = mid_x, y = mid_y)) +
   geom_segment(data = basins_ana,
@@ -168,14 +184,3 @@ ggplot() +
                         fill = as.character(anthroregions.lvl1$col.all.lvl1)),
                         order = 1))
 dev.off()
-
-ggplot(df) +
-  aes(
-    x, y, label = label, angle = angle, color = color, fill = fill,
-    hjust = hjust, vjust = vjust
-  ) +
-  geom_richtext() +
-  geom_point(color = "black", size = 2) +
-  scale_color_identity() +
-  scale_fill_identity() +
-  xlim(0, 1) + ylim(0, 1)
