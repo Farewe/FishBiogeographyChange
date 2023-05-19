@@ -1444,7 +1444,9 @@ thememaps <- theme(legend.key.size = unit(1, "cm"),
                    legend.title = element_text(size = 18),
                    panel.grid = element_blank(),
                    line = element_blank(),
-                   rect = element_blank())
+                   rect = element_blank(),
+                   legend.position = "right",
+                   plot.margin = margin(1, 0.1, 1.5, 0.1, "cm")) 
 
 # Level 1
 pnative1 <- ggplot() +
@@ -1454,14 +1456,15 @@ pnative1 <- ggplot() +
           col = grey(.2),
           size = .5) +
   theme_minimal() +
-  coord_sf(datum = NA) +
+  coord_sf(datum = NA, ylim = c(-6e6, 8.1e6),
+           xlim = c(-10e6, 14e6)) +
   scale_fill_identity(name = "",
                       labels = as.character(bioregions.lvl1$name),
                       guide = guide_legend(override.aes = list(
                         fill = as.character(bioregions.lvl1$col.native.lvl1)),
                         order = 1)) +
   thememaps
-
+pnative1
 
 # Native level 2
 pnative2 <- ggplot() +
@@ -1471,7 +1474,7 @@ pnative2 <- ggplot() +
           col = grey(.2),
           size = .5) +
   theme_minimal() +
-  coord_sf(datum = NA) +
+   coord_sf(datum = NA, ylim = c(-6e6, 8.1e6),            xlim = c(-10e6, 14e6)) +
   scale_fill_identity(name = "",
                       labels = as.character(bioregions.lvl2$name),
                       guide = guide_legend(override.aes = list(
@@ -1483,6 +1486,7 @@ saveRDS(pnative2,
         "outputs/pnative2.RDS")
 
 # Native level 3
+bioregions.lvl3$name[grep("minor", bioregions.lvl3$name)] <- "Minor\nclusters"
 pnative3 <- ggplot() +
   geom_sf(data = gr, color = 'grey') +
   geom_sf(data = wm, col = grey(.6), fill = grey(.9)) +
@@ -1490,7 +1494,7 @@ pnative3 <- ggplot() +
           col = grey(.2),
           size = .5) +
   theme_minimal() +
-  coord_sf(datum = NA) +
+   coord_sf(datum = NA, ylim = c(-6e6, 8.1e6),            xlim = c(-10e6, 14e6)) +
   scale_fill_identity(name = "",
                       labels = as.character(bioregions.lvl3$name),
                       guide = guide_legend(override.aes = list(
@@ -1507,7 +1511,7 @@ panthro1 <- ggplot() +
           col = grey(.2),
           size = .5) +
   theme_minimal() +
-  coord_sf(datum = NA) +
+   coord_sf(datum = NA, ylim = c(-6e6, 8.1e6),            xlim = c(-10e6, 14e6)) +
   scale_fill_identity(name = "",
                       labels = as.character(anthroregions.lvl1$name),
                       guide = guide_legend(override.aes = list(
@@ -1516,6 +1520,7 @@ panthro1 <- ggplot() +
   thememaps
 
 # Plotting only subregions of Anthropocenian
+anthroregions.lvl2$name[grep("minor", anthroregions.lvl2$name)] <- "Minor\nclusters"
 panthro2 <- ggplot() +
   geom_sf(data = gr, color = 'grey') +
   geom_sf(data = wm, col = grey(.6), fill = grey(.9)) +
@@ -1524,7 +1529,7 @@ panthro2 <- ggplot() +
           col = grey(.2),
           size = .5) +
   theme_minimal() +
-  coord_sf(datum = NA) +
+   coord_sf(datum = NA, ylim = c(-6e6, 8.1e6),            xlim = c(-10e6, 14e6)) +
   scale_fill_identity(name = "",
                       labels = as.character(anthroregions.lvl2$name),
                       guide = guide_legend(override.aes = list(
@@ -1533,6 +1538,7 @@ panthro2 <- ggplot() +
                         ncol = 2)) +
   thememaps
 
+anthroregions.lvl3$name[grep("minor", anthroregions.lvl3$name)] <- "Minor\nclusters"
 panthro3 <- ggplot() +
   geom_sf(data = gr, color = 'grey') +
   geom_sf(data = wm, col = grey(.6), fill = grey(.9)) +
@@ -1541,7 +1547,7 @@ panthro3 <- ggplot() +
           col = grey(.2),
           size = .5) +
   theme_minimal() +
-  coord_sf(datum = NA) +
+   coord_sf(datum = NA, ylim = c(-6e6, 8.1e6),            xlim = c(-10e6, 14e6)) +
   scale_fill_identity(name = "",
                       labels = as.character(anthroregions.lvl3$name),
                       guide = guide_legend(override.aes = list(
@@ -1558,7 +1564,7 @@ pintro1 <- ggplot() +
           col = grey(.2),
           size = .5) +
   theme_minimal() +
-  coord_sf(datum = NA) +
+   coord_sf(datum = NA, ylim = c(-6e6, 8.1e6),            xlim = c(-10e6, 14e6)) +
   scale_fill_identity(name = "",
                       labels = as.character(introregions.lvl1$name),
                       guide = guide_legend(override.aes = list(
@@ -1567,6 +1573,7 @@ pintro1 <- ggplot() +
   thememaps
 
 # Level 2
+introregions.lvl2$name[grep("minor", introregions.lvl2$name)] <- "Minor\nclusters"
 pintro2 <- ggplot() +
   geom_sf(data = gr, color = 'grey') +
   geom_sf(data = wm, col = grey(.6), fill = grey(.9)) +
@@ -1575,7 +1582,7 @@ pintro2 <- ggplot() +
           col = grey(.2),
           size = .5) +
   theme_minimal() +
-  coord_sf(datum = NA) +
+   coord_sf(datum = NA, ylim = c(-6e6, 8.1e6),            xlim = c(-10e6, 14e6)) +
   scale_fill_identity(name = "",
                       labels = as.character(introregions.lvl2$name),
                       guide = guide_legend(override.aes = list(
@@ -1586,6 +1593,7 @@ pintro2 <- ggplot() +
 
 
 # Level 3
+introregions.lvl3$name[grep("minor", introregions.lvl3$name)] <- "Minor\nclusters"
 pintro3 <- ggplot() +
   geom_sf(data = gr, color = 'grey') +
   geom_sf(data = wm, col = grey(.6), fill = grey(.9)) +
@@ -1594,7 +1602,7 @@ pintro3 <- ggplot() +
           col = grey(.2),
           size = .5) +
   theme_minimal() +
-  coord_sf(datum = NA) +
+   coord_sf(datum = NA, ylim = c(-6e6, 8.1e6),            xlim = c(-10e6, 14e6)) +
   scale_fill_identity(name = "",
                       labels = as.character(introregions.lvl3$name),
                       guide = guide_legend(override.aes = list(
@@ -1612,7 +1620,7 @@ pext1 <- ggplot() +
           col = grey(.2),
           size = .5) +
   theme_minimal() +
-  coord_sf(datum = NA) +
+   coord_sf(datum = NA, ylim = c(-6e6, 8.1e6),            xlim = c(-10e6, 14e6)) +
   scale_fill_identity(name = "",
                       labels = as.character(native.extregions.lvl1$name),
                       guide = guide_legend(override.aes = list(
@@ -1629,7 +1637,7 @@ pext2 <- ggplot() +
           col = grey(.2),
           size = .5) +
   theme_minimal() +
-  coord_sf(datum = NA) +
+   coord_sf(datum = NA, ylim = c(-6e6, 8.1e6),            xlim = c(-10e6, 14e6)) +
   scale_fill_identity(name = "",
                       labels = as.character(native.extregions.lvl2$name),
                       guide = guide_legend(override.aes = list(
@@ -1638,6 +1646,7 @@ pext2 <- ggplot() +
   thememaps
 
 # Level 3
+native.extregions.lvl3$name[grep("minor", native.extregions.lvl3$name)] <- "Minor\nclusters"
 pext3 <- ggplot() +
   geom_sf(data = gr, color = 'grey') +
   geom_sf(data = wm, col = grey(.6), fill = grey(.9)) +
@@ -1646,7 +1655,7 @@ pext3 <- ggplot() +
           col = grey(.2),
           size = .5) +
   theme_minimal() +
-  coord_sf(datum = NA) +
+   coord_sf(datum = NA, ylim = c(-6e6, 8.1e6),            xlim = c(-10e6, 14e6)) +
   scale_fill_identity(name = "",
                       labels = as.character(native.extregions.lvl3$name),
                       guide = guide_legend(override.aes = list(
@@ -1655,31 +1664,41 @@ pext3 <- ggplot() +
   thememaps
 }
 
-cairo_pdf("./outputs/maps_anthropocene.pdf", width = 32, height = 12,
+cairo_pdf("./outputs/maps_anthropocene.pdf", width = 22, height = 16,
           pointsize = 6)
-egg::ggarrange(pnative1, pnative2, pnative3, panthro1, panthro2, panthro3,
+# egg::ggarrange(pnative1, pnative2, pnative3, panthro1, panthro2, panthro3,
+#                labels = c("a. Natural regions, level 1 clusters",
+#                           "b. Natural regions, level 2 clusters",
+#                           "c. Natural regions, level 3 clusters",
+#                           "d. Anthropocene regions, level 1 clusters",
+#                           "e. Anthropocene regions, level 2 clusters",
+#                           "f. Anthropocene regions, level 3 clusters"),
+#                newpage = FALSE,
+#                nrow = 2,
+#                label.args = list(gp = grid::gpar(font = 4, cex = 3)))
+egg::ggarrange(pnative1, panthro1, pnative2, panthro2, pnative3, panthro3,
                labels = c("a. Natural regions, level 1 clusters",
-                          "b. Natural regions, level 2 clusters",
-                          "c. Natural regions, level 3 clusters",
                           "d. Anthropocene regions, level 1 clusters",
+                          "b. Natural regions, level 2 clusters",
                           "e. Anthropocene regions, level 2 clusters",
+                          "c. Natural regions, level 3 clusters",
                           "f. Anthropocene regions, level 3 clusters"),
                newpage = FALSE,
-               nrow = 2,
+               nrow = 3,
                label.args = list(gp = grid::gpar(font = 4, cex = 3)))
 dev.off()
 
-cairo_pdf("./outputs/maps_introonly_nativeext.pdf", width = 32, height = 12,
+cairo_pdf("./outputs/maps_introonly_nativeext.pdf", width = 22, height = 16,
           pointsize = 6)
-egg::ggarrange(pext1, pext2, pext3, pintro1, pintro2, pintro3,
+egg::ggarrange(pext1, pintro1, pext2, pintro2, pext3, pintro3,
                labels = c("a. Natural regions and extirpations, level 1 clusters",
-                          "b. Natural regions and extirpations, level 2 clusters",
-                          "c. Natural regions and extirpations, level 3 clusters",
                           "d. Natural regions and introductions, level 1 clusters",
+                          "b. Natural regions and extirpations, level 2 clusters",
                           "e. Natural regions and introductions, level 2 clusters",
+                          "c. Natural regions and extirpations, level 3 clusters",
                           "f. Natural regions and introductions, level 3 clusters"),
                newpage = FALSE,
-               nrow = 2,
+               nrow = 3,
                label.args = list(gp = grid::gpar(font = 4, cex = 3)))
 dev.off()
 
@@ -1695,7 +1714,7 @@ dev.off()
 png("./outputs/regions_native_lvl3.png", h = 1300, w = 1600)
 pnative3
 dev.off()
-
+ 
 
 png("./outputs/regions_all_lvl1.png", h = 1300, w = 1600)
 panthro1

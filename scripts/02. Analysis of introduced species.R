@@ -662,8 +662,33 @@ topsp$xmod2[13] <- 70
 
 topsp$number <- 1:nrow(topsp)
 
+
 topsp$label <- paste0(topsp$number, 
-                      "~italic('", topsp$species, "')")
+                      "** *", topsp$species, "*")
+
+
+# topsp$label[1] <- paste0(topsp$label[1], (" (European carp)"))
+# topsp$label[2] <- paste0(topsp$label[2], (" (Goldfish)"))
+# topsp$label[3] <- paste0(topsp$label[3], (" (Eastern <br> mosquitofish)"))
+
+txt <- data.frame(text = 
+                    paste0("**", 
+                           paste0(topsp$label, 
+                                  c(" (European carp)",
+                                    " (Goldfish)",
+                                    " (Eastern <br> mosquitofish)",
+                                    " (Mosquitofish)",
+                                    "<br> (Mozambique tilapia)",
+                                    "<br> (Largemouth bass)",
+                                    " (Guppy)",
+                                    "<br> (Grass carp)",
+                                    " (European perch)",
+                                    "<br> (Snakeskin gourami)",
+                                    "<br> (Pumpkinseed)",
+                                    " (Nile<br> tilapia)",
+                                    "<br> (Silver carp)"),
+                                  collapse = "<br>**"),
+                           collapse = ""))
 
 cairo_pdf("./outputs/Figure 5.pdf",
           height = 10, width = 10)
@@ -681,13 +706,13 @@ ggplot(intro.chars) +
             size = 5,
             hjust = .75,
             vjust = .25) +
-  geom_text(data = topsp,
-            aes(y = ymod,
-                label = label),
-            x = 110, 
-            y = seq(1, 0, length = 13),
+  geom_richtext(data = txt,
+            aes(label = text),
+            x = 105, 
+            y = 0.4,
             hjust = 0,
-            size = 4, parse = TRUE) +
+            size = 4,
+            fill = NA, label.color = NA) +
   theme_minimal() +
   coord_cartesian(clip = "off") +
   scale_y_log10() +

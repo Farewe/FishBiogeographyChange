@@ -80,12 +80,89 @@ top.fish.per.basin <- lapply(fish.per.basin,
                                  x[which(x %in% intro.chars$species[1:13])])
                              })
 
+
+# Get bioregion colours
+bioregions.lvl2 <- readRDS("./data/bioregions_lvl2")
+# Species colours
+sp.col <- intro.chars[1:13, c("species", "native.bioregion")]
+sp.col$color <- bioregions.lvl2$col.native.lvl2[match(
+  sp.col$native.bioregion,
+  bioregions.lvl2$name
+)]
+
+top.fish.per.basin.vern <- top.fish.per.basin
+for(basin in 1:length(top.fish.per.basin))
+{
+  top.fish.per.basin.vern[[basin]] <- 
+    gsub('Carassius auratus', 
+       '<span style="color:#66C2A5">**Goldfish**</span>',
+       top.fish.per.basin.vern[[basin]])
+  
+  top.fish.per.basin.vern[[basin]] <- 
+    gsub('Ctenopharyngodon idella', 
+         '<span style="color:#66C2A5">**Grass carp**</span>',
+         top.fish.per.basin.vern[[basin]])
+  
+  top.fish.per.basin.vern[[basin]] <- 
+    gsub('Cyprinus carpio', 
+         '<span style="color:#E5C494">**European carp**</span>',
+         top.fish.per.basin.vern[[basin]])
+  
+  top.fish.per.basin.vern[[basin]] <- 
+    gsub('Gambusia holbrooki', 
+         '<span style="color:#FFD92F">**Eastern mosquitofish**</span>',
+         top.fish.per.basin.vern[[basin]])
+  
+  top.fish.per.basin.vern[[basin]] <- 
+    gsub('Hypophthalmichthys molitrix', 
+         '<span style="color:#66C2A5">**Silver carp**</span>',
+         top.fish.per.basin.vern[[basin]])
+  
+  top.fish.per.basin.vern[[basin]] <- 
+    gsub('Oreochromis mossambicus', 
+         '<span style="color:#FC8D62">**Mozambique tilapia**</span>',
+         top.fish.per.basin.vern[[basin]])
+  
+  top.fish.per.basin.vern[[basin]] <- 
+    gsub('Oreochromis niloticus', 
+         '<span style="color:#FC8D62">**Nile tilapia**</span>',
+         top.fish.per.basin.vern[[basin]])
+  
+  top.fish.per.basin.vern[[basin]] <- 
+    gsub('Poecilia reticulata', 
+         '<span style="color:#A6D854">**Guppy**</span>',
+         top.fish.per.basin.vern[[basin]])
+  
+  top.fish.per.basin.vern[[basin]] <- 
+    gsub('Micropterus salmoides', 
+         '<span style="color:#FFD92F">**Largemouth bass**</span>',
+         top.fish.per.basin.vern[[basin]])
+  
+  top.fish.per.basin.vern[[basin]] <- 
+    gsub('Gambusia affinis', 
+         '<span style="color:#FFD92F">**Mosquitofish**</span>',
+         top.fish.per.basin.vern[[basin]])
+  
+  top.fish.per.basin.vern[[basin]] <- 
+    gsub('Lepomis gibbosus', 
+         '<span style="color:#FFD92F">**Pumpkinseed**</span>',
+         top.fish.per.basin.vern[[basin]])
+  
+  top.fish.per.basin.vern[[basin]] <- 
+    gsub('Perca fluviatilis', 
+         '<span style="color:#E5C494">**European perch**</span>',
+         top.fish.per.basin.vern[[basin]])
+  
+}
+
 # Add fish names in basins_ana
 basins_ana$introduced.species <- NA
 for (basin in names(top.fish.per.basin)) {
   basins_ana$introduced.species[basins_ana$BasinName == basin] <- 
-    paste0("- *", paste0(top.fish.per.basin[[basin]], collapse = "*<br>- *"),
-           "*")
+    paste0("<span style='color:#E6E6E6'> - </span> ", 
+           paste0(top.fish.per.basin.vern[[basin]], 
+                  collapse = "<br><span style='color:#E6E6E6'> - </span> "),
+           "")
 }
 
 # Add info on endemism
@@ -102,28 +179,32 @@ basins_ana$basin_clean[basins_ana$basin_clean == "Murray.Darling"] <-
 
 # Create text for text boxes
 basins_ana$text <-
-  paste0("**", basins_ana$basin_clean, "**<br><br>• ", 
+  paste0('**<span style="color:#FCFCFC">',
+         basins_ana$basin_clean,
+         " basin</span>**<br><br><span style=color:#FCFCFC>• ", 
          basins_ana$richness.native,
          " native species <br>• ",
          basins_ana$n_introduced, 
          " introduced species<br>• ",
          " ↓", round(basins_ana$endemism.change * 100, 1),
-         "% endemism <br>",
-         "<br>Main introduced species:<br>",
+         "% endemism </span><br>",
+         "<br><span style=color:#FCFCFC>Main introduced species:</span><br>",
          basins_ana$introduced.species)
 
 # Danube & Zambezi have 1 extirpation
 dz <- which(basins_ana$BasinName %in%
               c("Danube", "Zambezi"))
 basins_ana$text[dz] <-
-  paste0("**", basins_ana$basin_clean[dz], "**<br><br>• ", 
+  paste0('**<span style="color:#FCFCFC">',
+         basins_ana$basin_clean[dz], 
+         " basin</span>**<br><br><span style=color:#FCFCFC>• ", 
          basins_ana$richness.native[dz],
          " native species <br>• ",
          basins_ana$n_introduced[dz], 
          " introduced species<br>• 1 extirpated species<br>• ",
          " ↓", round(basins_ana$endemism.change[dz] * 100, 1),
-         "% endemism <br>",
-         "<br>Main introduced species:<br>",
+         "% endemism  </span><br>",
+         "<br><span style=color:#FCFCFC>Main introduced species:</span><br>",
          basins_ana$introduced.species[dz])
 
 
@@ -142,6 +223,15 @@ anthroregions.lvl1 <- readRDS("./data/anthroregions_lvl1")
 basins_ana$y_pos <- c(5e6, 5e6, -7e6, 11.5e6, -7.5e6, -7e6)
 basins_ana$x_pos <- c(-14e6, 14.5e6, -12e6, -2e6, 4e6, 18e6)
 
+leg_col <- data.frame(x = 14000000,
+                      y = 12000000,
+                      text = paste0("<span style=color:#FCFCFC>Text color indicates<br>",
+                                    "species region of origin</span> <br><br>",
+                                    "<span style=color:#66C2A5> **Sino-Oriental** </span><br>",
+                                    "<span style=color:#FC8D62> **Ethiopian** </span><br>",
+                                    "<span style=color:#E5C494> **Palearctic** </span><br>",
+                                    "<span style=color:#A6D854> **Neotropical** </span><br>",
+                                    "<span style=color:#FFD92F> **Nearctic** </span><br>"))
 
 library(ggplot2)
 library(ggtext)
@@ -165,7 +255,14 @@ ggplot() +
                    y = y_pos,
                    label = text),
                width = NULL,
-               fill = "cornsilk",
+               fill = "#404040",
+               maxwidth = unit(0.1, "in")) +
+  geom_textbox(data = leg_col, 
+               aes(x = x,
+                   y = y,
+                   label = text),
+               width = NULL,
+               fill = "#404040",
                maxwidth = unit(0.1, "in")) +
   coord_sf(clip = "off", datum = NA,
            xlim = c(-15e6, 19e6),
@@ -174,11 +271,12 @@ ggplot() +
   theme(legend.position = c(0.7, 1),
         panel.border = element_blank(),
         plot.margin = margin(0.35, 0.5, 0.35, 0.5),
-        legend.text = element_text(size=15),
+        legend.text = element_text(size=14),
+        legend.title = element_text(size = 14),
         legend.key.size = unit(0.8, 'cm'), 
         legend.key.height = unit(0.8, 'cm'), 
         legend.key.width = unit(0.8, 'cm'))  +
-  scale_fill_identity(name = "",
+  scale_fill_identity(name = "Map colors",
                       labels = as.character(anthroregions.lvl1$name),
                       guide = guide_legend(override.aes = list(
                         fill = as.character(anthroregions.lvl1$col.all.lvl1)),
