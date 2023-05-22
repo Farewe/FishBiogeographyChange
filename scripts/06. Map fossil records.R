@@ -223,10 +223,10 @@ anthroregions.lvl1 <- readRDS("./data/anthroregions_lvl1")
 basins_ana$y_pos <- c(5e6, 5e6, -7e6, 11.5e6, -7.5e6, -7e6)
 basins_ana$x_pos <- c(-14e6, 14.5e6, -12e6, -2e6, 4e6, 18e6)
 
-leg_col <- data.frame(x = 14000000,
+leg_col <- data.frame(x = 14500000,
                       y = 12000000,
-                      text = paste0("<span style=color:#FCFCFC>Text color indicates<br>",
-                                    "species region of origin</span> <br><br>",
+                      text = paste0("<span style=color:#FCFCFC>Text color for species <br>",
+                                    "indicates pre-Anthropocene <br>region of origin</span> <br><br>",
                                     "<span style=color:#66C2A5> **Sino-Oriental** </span><br>",
                                     "<span style=color:#FC8D62> **Ethiopian** </span><br>",
                                     "<span style=color:#E5C494> **Palearctic** </span><br>",
@@ -276,7 +276,7 @@ ggplot() +
         legend.key.size = unit(0.8, 'cm'), 
         legend.key.height = unit(0.8, 'cm'), 
         legend.key.width = unit(0.8, 'cm'))  +
-  scale_fill_identity(name = "Map colors",
+  scale_fill_identity(name = "Map colors for\nAnthropocene regions",
                       labels = as.character(anthroregions.lvl1$name),
                       guide = guide_legend(override.aes = list(
                         fill = as.character(anthroregions.lvl1$col.all.lvl1)),
