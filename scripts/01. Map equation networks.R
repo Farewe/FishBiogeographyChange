@@ -862,7 +862,7 @@ cutoffs$ytext[which(cutoffs$type == "Major")] <- cutoffs$yend[which(cutoffs$type
   cutoffs$yend[which(cutoffs$type == "Major")]/2
 
 
-lett <- data.frame(letters = paste0(letters[1:12], "."),
+lett <- data.frame(letters = paste0(LETTERS[1:12], "."),
                    lvl = factor(rep(c("Level 1",
                                "Level 2",
                                "Level 3"), 4),
@@ -1677,12 +1677,12 @@ cairo_pdf("./outputs/maps_anthropocene.pdf", width = 22, height = 16,
 #                nrow = 2,
 #                label.args = list(gp = grid::gpar(font = 4, cex = 3)))
 egg::ggarrange(pnative1, panthro1, pnative2, panthro2, pnative3, panthro3,
-               labels = c("a. Natural regions, level 1 clusters",
-                          "d. Anthropocene regions, level 1 clusters",
-                          "b. Natural regions, level 2 clusters",
-                          "e. Anthropocene regions, level 2 clusters",
-                          "c. Natural regions, level 3 clusters",
-                          "f. Anthropocene regions, level 3 clusters"),
+               labels = c("A. Natural regions, level 1 clusters",
+                          "D. Anthropocene regions, level 1 clusters",
+                          "B. Natural regions, level 2 clusters",
+                          "E. Anthropocene regions, level 2 clusters",
+                          "C. Natural regions, level 3 clusters",
+                          "F. Anthropocene regions, level 3 clusters"),
                newpage = FALSE,
                nrow = 3,
                label.args = list(gp = grid::gpar(font = 4, cex = 3)))
@@ -1691,12 +1691,12 @@ dev.off()
 cairo_pdf("./outputs/maps_introonly_nativeext.pdf", width = 22, height = 16,
           pointsize = 6)
 egg::ggarrange(pext1, pintro1, pext2, pintro2, pext3, pintro3,
-               labels = c("a. Natural regions and extirpations, level 1 clusters",
-                          "d. Natural regions and introductions, level 1 clusters",
-                          "b. Natural regions and extirpations, level 2 clusters",
-                          "e. Natural regions and introductions, level 2 clusters",
-                          "c. Natural regions and extirpations, level 3 clusters",
-                          "f. Natural regions and introductions, level 3 clusters"),
+               labels = c("A. Natural regions and extirpations, level 1 clusters",
+                          "D. Natural regions and introductions, level 1 clusters",
+                          "B. Natural regions and extirpations, level 2 clusters",
+                          "E. Natural regions and introductions, level 2 clusters",
+                          "C. Natural regions and extirpations, level 3 clusters",
+                          "F. Natural regions and introductions, level 3 clusters"),
                newpage = FALSE,
                nrow = 3,
                label.args = list(gp = grid::gpar(font = 4, cex = 3)))
