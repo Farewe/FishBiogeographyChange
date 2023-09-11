@@ -22,12 +22,23 @@ fish.all$X6.Fishbase.Valid.Species.Name <- as.factor(fish.all$X6.Fishbase.Valid.
 dbnative <- table(fish.native$X6.Fishbase.Valid.Species.Name, fish.native$X1.Basin.Name)
 
 occnative <- rowSums(dbnative)
+
+
 hist(occnative, breaks = 60)
 abline(v = 10, col = "darkred")
 length(which(occnative > 10))
 
 intro_chars <- readRDS("./outputs/introduced_species_characteristics.RDS")
 
+
+extract_occs <- data.frame(species = names(occnative),
+                           occurrence = occnative)
+extract_occs$introduced <- 0
+extract_occs$introduced[which(extract_occs$species %in% 
+                                intro_chars$species)] <- 1
+
+xlsx::write.xlsx(extract_occs,
+                 file = "data/species_occurrences.xlsx")
 
 occ_comparaison <- data.frame(cutoff = #seq(0, max(occnative), by = 10),
                                 c(0, 10, 50, 100, 200))
